@@ -101,7 +101,7 @@ The following notebooks contain example code showing how to use DevTorch for spe
 - [Customizing training: LR scheduling and grad clipping ](../notebooks/train/LR%20scheduling%20and%20grad%20clipping.ipynb)
 
 #### Setting hyperparameters
-- [Validate using K-fold validation](../notebooks/val/Held-out%20validation.ipynb)
+- [Validate using K-fold validation](../notebooks/val/K-fold%20validation.ipynb)
 
 #### Evals
 - [Loading logs, models and hyperparams](../notebooks/eval/Loading.ipynb)
