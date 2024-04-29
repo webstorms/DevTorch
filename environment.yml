@@ -1,0 +1,11 @@
+name: devtorch
+dependencies:
+  - python=3.8
+  - black
+  - pytest
+  - jupyter
+  - nb_conda_kernels
+  - pip:
+    - matplotlib
+    - -r requirements.txt
+    - --editable .

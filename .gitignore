@@ -1,0 +1,16 @@
+# OSX
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.devtorch.egg-info
+devtorch.egg-info/
+devtorch/devtorch.egg-info/
+dist
+
+# PyCharm
+.idea
+
+# Jupyter Notebook
+.ipynb_checkpoints
