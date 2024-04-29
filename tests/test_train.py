@@ -28,7 +28,7 @@ def test_trainer():
         batch_size=128,
         lr=0.001,
         device="cpu",
-        id="test"
+        id="test",
     )
     assert trainer.n_epochs == 10
     assert trainer.batch_size == 128
