@@ -5,13 +5,14 @@
 <h4 align="center">A lightweight deep learning framework to rapidly prototype AI models.</h4>
 
 <p align="center">
-  <a href="https://badge.fury.io/js/electron-markdownify">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg">
-  </a>
     <a href="https://badge.fury.io/js/electron-markdownify">
     <img src="https://github.com/webstorms/DevTorch/actions/workflows/tests.yml/badge.svg">
 <img src="https://github.com/webstorms/DevTorch/actions/workflows/linting.yml/badge.svg">
   </a>
+  <a href="https://badge.fury.io/js/electron-markdownify">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg">
+  </a>
+<a href="https://doi.org/10.5281/zenodo.11383797"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.11383797.svg" alt="DOI"></a>
 </p>
 
 ## Install DevTorch
@@ -107,6 +108,20 @@ The following notebooks contain example code showing how to use DevTorch for spe
 - [Loading logs, models and hyperparams](../notebooks/eval/Loading.ipynb)
 - [Custom eval](../notebooks/eval/Custom%20eval.ipynb)
 - [Loading multiple evals](../notebooks/eval/Loading%20multiple%20evals.ipynb)
+
+## Citation
+If you use DevTorch in your work, please cite it as follows:
+```bibtex
+@software{devtorch2024,
+  author       = {Taylor, Luke},
+  title        = {{DevTorch: A lightweight deep learning framework to rapidly prototype AI models}},
+  month        = may,
+  year         = 2024,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.11383797},
+  url          = {https://doi.org/10.5281/zenodo.11383797}
+}
+```
 
 ## License
 DevTorch has a MIT license, as found in the LICENSE file.

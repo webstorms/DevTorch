@@ -169,7 +169,7 @@ class Trainer:
 
     def train_for_single_epoch(self):
         epoch_loss = 0
-
+        
         for batch_id, (data, target) in enumerate(self.train_data_loader):
             data = util.cast(data, self.device, self.dtype)
             target = util.cast(target, self.device, self.dtype)

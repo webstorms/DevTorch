@@ -54,8 +54,7 @@ def compute_metric(
     metric_list = []
     data_loader = torch.utils.data.DataLoader(dataset, batch_size)
 
-    if model.device != device:
-        model.to(device)
+    model.to(device)
 
     with torch.no_grad():
         for data, target in data_loader:
