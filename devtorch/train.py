@@ -221,7 +221,11 @@ class Trainer:
             epoch_duration = end_time - start_time
             self.log["train_loss"].append(epoch_loss)
             self.log["duration"].append(epoch_duration)
-            self.on_epoch_complete(save, epoch)
+            interrupt = self.on_epoch_complete(save, epoch)
+            if interrupt is not None:
+                # Allows the on_epoch_complete to interrupt the training process
+                # incase some user-specified conditions are met
+                break
 
         self.on_training_complete(save)
 
