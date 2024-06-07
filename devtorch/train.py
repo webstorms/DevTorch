@@ -158,7 +158,7 @@ class Trainer:
     def on_training_start(self, save):
         if save:
             self.save_hyperparams()
-    
+
     def on_epoch_complete(self, save, epoch=None):
         epoch_loss = self.log["train_loss"][-1]
         epoch_duration = self.log["duration"][-1]
