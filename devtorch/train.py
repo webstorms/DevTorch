@@ -158,8 +158,13 @@ class Trainer:
     def on_training_start(self, save):
         if save:
             self.save_hyperparams()
-
-    def on_epoch_complete(self, save):
+    
+    def on_epoch_complete(self, save, epoch=None):
+        epoch_loss = self.log["train_loss"][-1]
+        epoch_duration = self.log["duration"][-1]
+        logger.info(
+            f"Completed epoch {epoch} with loss {epoch_loss} in {epoch_duration:.4f}s"
+        )
         if save:
             self.save_log()
 
@@ -169,7 +174,7 @@ class Trainer:
 
     def train_for_single_epoch(self):
         epoch_loss = 0
-        
+
         for batch_id, (data, target) in enumerate(self.train_data_loader):
             data = util.cast(data, self.device, self.dtype)
             target = util.cast(target, self.device, self.dtype)
@@ -214,13 +219,9 @@ class Trainer:
             epoch_loss = self.train_for_single_epoch()
             end_time = time.time()
             epoch_duration = end_time - start_time
-            logger.info(
-                f"Completed epoch {epoch} with loss {epoch_loss} in {epoch_duration:.4f}s"
-            )
             self.log["train_loss"].append(epoch_loss)
             self.log["duration"].append(epoch_duration)
-
-            self.on_epoch_complete(save)
+            self.on_epoch_complete(save, epoch)
 
         self.on_training_complete(save)
 
