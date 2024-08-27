@@ -11,7 +11,7 @@ def load_model(root, id, model_loader, device="cuda", dtype=torch.float):
     # model_loader: Create model instance from hyperparams
     model_path = os.path.join(root, id, "model.pt")
     model = model_loader(load_hyperparams(root, id))
-    model.load_state_dict(torch.load(model_path))
+    model.load_state_dict(torch.load(model_path, map_location=device))
 
     return model.to(device).type(dtype)
 
