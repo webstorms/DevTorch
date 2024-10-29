@@ -30,7 +30,7 @@ class Trainer:
     def __init__(
         self,
         model,
-        train_dataset,
+        train_dataset=None,
         root="",
         n_epochs=100,
         batch_size=128,
@@ -66,9 +66,10 @@ class Trainer:
         # Instantiate housekeeping variables
         self.id = str(uuid.uuid4().hex) if id is None else id
         self.log = {"train_loss": [], "duration": []}
-        self.train_data_loader = torch.utils.data.DataLoader(
-            self.train_dataset, self.batch_size, **loader_kwargs
-        )
+        if train_dataset is not None:
+            self.train_data_loader = torch.utils.data.DataLoader(
+                self.train_dataset, self.batch_size, **loader_kwargs
+            )
 
         self.optimizer = self.optimizer_func(
             self.model.parameters(), self.lr, **optimizer_kwargs
@@ -99,7 +100,8 @@ class Trainer:
     @property
     def hyperparams(self):
         model_hyperparams = getattr(self.model, "hyperparams", None)
-        dataset_hyperparams = getattr(self.train_dataset, "hyperparams", None)
+        if self.train_dataset is not None:
+            dataset_hyperparams = getattr(self.train_dataset, "hyperparams", None)
 
         hyperparams = {
             "trainer": {
@@ -111,17 +113,19 @@ class Trainer:
                 "grad_clip_type": self.grad_clip_type,
                 "grad_clip_value": self.grad_clip_value,
             },
-            "dataset": (
-                dataset_hyperparams
-                if dataset_hyperparams
-                else {"name": self.train_dataset.__class__.__name__}
-            ),
             "model": (
                 model_hyperparams
                 if model_hyperparams
                 else {"name": self.model.__class__.__name__}
             ),
         }
+
+        if self.train_dataset is not None:
+            hyperparams["dataset"] = (
+                dataset_hyperparams
+                if dataset_hyperparams
+                else {"name": self.train_dataset.__class__.__name__}
+            )
 
         return hyperparams
 
@@ -175,31 +179,30 @@ class Trainer:
     def train_for_single_epoch(self):
         epoch_loss = 0
 
-        for batch_id, (data, target) in enumerate(self.train_data_loader):
-            data = util.cast(data, self.device, self.dtype)
-            target = util.cast(target, self.device, self.dtype)
+        if self.train_dataset is not None:
+            for batch_id, (data, target) in enumerate(self.train_data_loader):
+                data = util.cast(data, self.device, self.dtype)
+                target = util.cast(target, self.device, self.dtype)
 
+                self.optimizer.zero_grad()
+                output = self.model(data)
+
+                if len(inspect.signature(self.loss).parameters) == 3:
+                    loss = self.loss(output, target, self.model)
+                else:
+                    loss = self.loss(output, target)
+                epoch_loss += loss.item()
+                loss.backward()
+
+                self._clip_gradients()
+                self.optimizer.step()
+        else:
             self.optimizer.zero_grad()
-            output = self.model(data)
-
-            if len(inspect.signature(self.loss).parameters) == 3:
-                loss = self.loss(output, target, self.model)
-            else:
-                loss = self.loss(output, target)
+            loss = self.loss()
             epoch_loss += loss.item()
             loss.backward()
 
-            if self.grad_clip_type is not None:
-                if self.grad_clip_type == Trainer.GRAD_NORM_CLIP:
-                    torch.nn.utils.clip_grad_norm_(
-                        self.model.parameters(), self.grad_clip_value
-                    )
-
-                elif self.grad_clip_type == Trainer.GRAD_VALUE_CLIP_POST:
-                    torch.nn.utils.clip_grad_value_(
-                        self.model.parameters(), self.grad_clip_value
-                    )
-
+            self._clip_gradients()
             self.optimizer.step()
 
         if self.scheduler is not None:
@@ -231,6 +234,18 @@ class Trainer:
 
     def loss(self, output, target, model):
         raise NotImplementedError
+
+    def _clip_gradients(self):
+        if self.grad_clip_type is not None:
+            if self.grad_clip_type == Trainer.GRAD_NORM_CLIP:
+                torch.nn.utils.clip_grad_norm_(
+                    self.model.parameters(), self.grad_clip_value
+                )
+
+            elif self.grad_clip_type == Trainer.GRAD_VALUE_CLIP_POST:
+                torch.nn.utils.clip_grad_value_(
+                    self.model.parameters(), self.grad_clip_value
+                )
 
 
 def get_trainer(loss_function, trainer_class=None, **kwargs):
