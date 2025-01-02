@@ -172,6 +172,9 @@ class Trainer:
         if save:
             self.save_log()
 
+    def on_batch_complete(self):
+        pass
+
     def on_training_complete(self, save):
         if save:
             self.save_model()
@@ -196,6 +199,7 @@ class Trainer:
 
                 self._clip_gradients()
                 self.optimizer.step()
+                self.on_batch_complete()
         else:
             self.optimizer.zero_grad()
             loss = self.loss()
