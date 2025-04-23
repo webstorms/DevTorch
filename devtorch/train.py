@@ -194,7 +194,7 @@ class Trainer:
                     loss = self.loss(output, target, self.model)
                 else:
                     loss = self.loss(output, target)
-                epoch_loss += loss.item()
+                epoch_loss += loss.detach().item()
                 loss.backward()
 
                 self._clip_gradients()
@@ -203,7 +203,7 @@ class Trainer:
         else:
             self.optimizer.zero_grad()
             loss = self.loss()
-            epoch_loss += loss.item()
+            epoch_loss += loss.detach().item()
             loss.backward()
 
             self._clip_gradients()

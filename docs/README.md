@@ -114,7 +114,7 @@ If you use DevTorch in your work, please cite it as follows:
 ```bibtex
 @software{devtorch2024,
   author       = {Taylor, Luke},
-  title        = {{DevTorch: A lightweight deep learning framework to rapidly prototype AI models}},
+  title        = {DevTorch: A lightweight deep learning framework to rapidly prototype AI models},
   month        = may,
   year         = 2024,
   publisher    = {Zenodo},
